@@ -60,7 +60,7 @@ class Perceptron:
 
 def load_img(digit, i=None):
     if i is None:
-        i = random.randint(0, 100)
+        i = random.randint(0, 1000)
 
     path = f'{MNIST_PATH}/{digit}/{i}.png'
 
