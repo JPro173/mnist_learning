@@ -54,13 +54,29 @@ class Perceptron:
         for x in range(self.size):
             for y in range(self.size):
                 # change the weights, so they are in range [-100, 100]
-                self.weights[y][x] = (self.weights[y][x] / max_weight) * 100
+                self.weights[y][x] = (self.weights[y][x] / max_weight) * 255
                 self.weights[y][x] = round(self.weights[y][x], 2)
+
+    def _g(self, value):
+        return int(value) if value > 0 else 0
+
+    def _b(self, value):
+        return int(-value) if value < 0 else 0
+
+    def save(self):
+        img = Image.new('RGB', (self.size, self.size))
+        raw_data = [
+             (0, self._g(self.weights[y][x]), self._b(self.weights[y][x]))
+                for x in range(self.size)
+                for y in range(self.size)
+        ]
+        img.putdata(raw_data)
+        img.save(f'./results/{self.digit}.png')
 
 
 def load_img(digit, i=None):
     if i is None:
-        i = random.randint(0, 1000)
+        i = random.randint(0, 800)
 
     path = f'{MNIST_PATH}/{digit}/{i}.png'
 
@@ -79,6 +95,7 @@ for current_digit in range(10):
             p.train(img_data, p.digit == digit)
 
     p.normalize()
+    p.save()
 
     results = Counter()
 
